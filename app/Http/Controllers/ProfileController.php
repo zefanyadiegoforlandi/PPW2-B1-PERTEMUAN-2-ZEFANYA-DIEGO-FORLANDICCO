@@ -60,8 +60,7 @@ class ProfileController extends Controller
         return Redirect::to('/');
     }
 
-    // Sisipkan kode ControllerBuku di sini
-
+    // kode BukuController : 
     public function index(){
         $batas = 5;
         $data_buku = Buku::paginate($batas);

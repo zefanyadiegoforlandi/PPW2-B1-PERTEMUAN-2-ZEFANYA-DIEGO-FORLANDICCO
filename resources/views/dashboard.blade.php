@@ -18,11 +18,14 @@
             <thead class="table-dark">
                 <tr>
                     <th>ID</th>
+                    <th>Gambar</th>
                     <th>Judul Buku</th>
                     <th>Penulis</th>
                     <th>Harga</th>
                     <th>Tanggal Terbit</th>
+                    @if(Auth::check() && Auth::user()->level == 'admin')
                     <th>Aksi</th>
+                    @endif
                 </tr>
             </thead>
             <tbody>
@@ -32,20 +35,35 @@
                 @foreach($data_buku as $b)
                 <tr>
                     <td>{{ $b->id }}</td>
+                    <td>
+                    @if($b->filepath)
+                        <div class="relative h-24 w-24">
+                            <img
+                                class="h-full w-full object-cover object-center"
+                                src="{{ asset($b->filepath) }}"
+                                alt=""
+                                style="padding-right: 20px;"
+                            />
+                        </div>
+                    @endif
+                    </td>
                     <td>{{ $b->judul }}</td>
                     <td>{{ $b->penulis }}</td>
+
                     <td>{{ 'Rp'.number_format($b->harga, 2, ',', '.') }}</td>
                     <td>{{ \Carbon\Carbon::parse($b->tgl_terbit)->format('D/m/Y') }}</td>
+                    @if(Auth::check() && Auth::user()->level == 'admin')
                     <td>
                         <form action="{{ route('buku.edit', $b->id) }}">
                             <button class="btn btn-primary" onclick="return confirm('Yakin mau diedit?')">Edit</button>
                         </form>
-                        <form action="{{ route('buku.destroy', $b->id) }}" method="post">
+                        <form action="{{ route('buku.destroy', $b->id) }}" method="POST">
                             @csrf
                             @method('DELETE')
                             <button class="btn btn-danger" onclick="return confirm('Yakin mau dihapus?')">Hapus</button>
                         </form>
                     </td>
+                    @endif
                 </tr>
                 @endforeach
             </tbody>
@@ -56,9 +74,14 @@
         {{ $data_buku->links() }}
     </div>
     <div>
+        @if(Auth::check() && Auth::user()->level == 'admin')
         <p><a href="{{ route('buku.create') }}">
-            <button class="btn btn-success">Tambah Buku</button>
+            <button class="btn btn-success">Tambah Buku</button> 
         </a></p>
+        @endif
+
+    </div>   
+    <div>
         <p class="text-lg">Jumlah data buku : {{ $jumlah_buku }}</p>
         <p class="text-lg">Jumlah harga semua buku adalah : Rp {{ number_format($total_harga, 2, ',', '.') }}</p>
     </div>

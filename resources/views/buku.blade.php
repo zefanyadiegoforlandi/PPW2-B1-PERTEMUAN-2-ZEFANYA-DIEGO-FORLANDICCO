@@ -114,6 +114,18 @@
             @foreach($data_buku as $b)
             <tr>
                 <td>{{ $b->id }}</td>
+                <td>
+                    @if($b->filepath)
+                        <div class="relative h-24 w-24">
+                            <img
+                                class="h-full w-full object-cover object-center"
+                                src="{{ asset($buku->filepath) }}"
+                                alt=""
+                                style="padding-right: 20px;"
+                            />
+                        </div>
+                    @endif
+                </td>
                 <td>{{ $b->judul }}</td>
                 <td>{{ $b->penulis }}</td>
                 <td>{{ 'Rp'.number_format($b->harga, 2, ',', '.') }}</td>
@@ -144,3 +156,4 @@
     </div>
 </body>
 </html>
+@endif

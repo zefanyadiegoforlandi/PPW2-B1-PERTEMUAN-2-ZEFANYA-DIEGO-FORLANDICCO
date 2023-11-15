@@ -1,17 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Buku</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="({ asset('css/bootsrap.min.css')})">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
-
-</head>
-<body class="bg-gray-100">
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            Tambah Buku
+        </h2>
+    </x-slot>
     @if(count($errors) > 0)
     <ul class="alert alert-danger">
         @foreach($errors->all() as $error)
@@ -20,7 +12,7 @@
     @endif    
     <div class="container mx-auto mt-10 max-w-md p-6 bg-white rounded-lg shadow-md">
         <h2 class="text-2xl font-semibold mb-4">Tambah Buku</h2>
-        <form action="{{ route('buku.store') }}" method="POST">
+        <form action="{{ route('buku.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="mb-4">
                 <label for="id" class="block text-gray-700 font-bold">ID</label>
@@ -48,22 +40,53 @@
                     </span>
                 </div>
             </div>
-            
-            <div class="flex justify-between">
-                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Simpan</button>
-                <a href="/buku" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Batal</a>
+
+            <div class="col-span-full mt-6">
+                <label for="thumbnail" class="block text-sm font-medium leading-6 text-gray-900">Thumbnail</label>
+                <div class="mt-2">
+                    <input type="file" name="thumbnail" id="thumbnail">
+                </div>
             </div>
+
+            <div class="col-span-full mt-6">
+                <label for="gallery" class="block text-sm font-medium leading-6 text-gray-900">Gallery</label>
+                <div class="mt-2" id="fileinput_wrapper">
+                </div>
+                <a href="javascript:void(0);" id="tambah" onclick="addFileInput()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    Tambah
+                </a>
+                <script type="text/javascript">
+                    function addFileInput() {
+                        var div = document.getElementById('fileinput_wrapper');
+                        div.innerHTML += '<input type="file" name="gallery[]" id="gallery" class="block w-full mb-5" style="margin-bottom:5px;">';
+                    };
+                </script>
+            </div>
+
+            <div class="gallery_items mt-6 flex space-x-4">
+                @foreach($buku->galleries()->get() as $gallery)
+                    <div class="gallery_item border-2 border-gray-200 shadow-lg p-2 rounded flex flex-col items-center">
+                        <img
+                            class="rounded-full object-cover object-center mb-2"
+                            src="{{ asset($gallery->path) }}"
+                            alt=""
+                            width="100"
+                            height="100"
+                        />
+                    </div>
+                @endforeach
+            </div>
+                <div class="flex justify-between">
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Simpan</button>
+                    <a href="/buku" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Batal</a>
+                </div>
+        
         </form>
     </div>
-</body>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
+
 <script type="text/javascript">
     $(function() {
        $('#datetimepicker').datetimepicker();
     });
 </script>
-
-</html>
+</x-app-layout> 

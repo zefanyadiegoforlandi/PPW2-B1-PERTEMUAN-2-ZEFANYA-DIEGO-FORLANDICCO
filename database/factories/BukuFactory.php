@@ -21,7 +21,7 @@ class BukuFactory extends Factory
             'judul'=>$this->faker->title(),
             'penulis'=>$this->faker->name(),
             'harga'=>$this->faker->randomNumber(),
-            'tgl_terbit'=>$this->faker->date()
+            'tgl_terbit'=>$this->faker->date('Y-m-d')
             //
         ];
     }
